@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 14,
+    color: '#fff',
   },
   author: {
     fontSize: 12,

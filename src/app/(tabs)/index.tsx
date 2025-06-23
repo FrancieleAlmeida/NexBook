@@ -7,10 +7,10 @@ export default function HomeScreen() {
     <ScrollView style={styles.container}>
       <Text style={styles.appName}>NexBook</Text>
 
-      <Text style={styles.sectionTitle}>Novos</Text>
+      <Text style={styles.sectionTitle}>🎁 Novos</Text>
       <Carousel type="novos" />
 
-      <Text style={styles.sectionTitle}>Populares</Text>
+      <Text style={styles.sectionTitle}>⭐ Populares</Text>
       <Carousel type="populares" />
     </ScrollView>
   );
@@ -19,7 +19,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#101923',
     paddingTop: 40,
     paddingHorizontal: 16,
   },
@@ -27,11 +27,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#fff',
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
     marginTop: 24,
     marginBottom: 12,
+    color: '#fff',
   },
 });
