@@ -1,12 +1,31 @@
-import { TextInput, TextInputProps } from "react-native";
+import { TextInput, TextInputProps, View } from "react-native";
+import { Feather } from "@expo/vector-icons"
+import { Controller, UseControllerProps } from "react-hook-form"
 
 import { styles } from "./style";
-type Props = TextInputProps & {
-  place: string
+type Props = {
+  icon: keyof typeof Feather.glyphMap;
+  formProps: UseControllerProps;
+  inputProps: TextInputProps;
 }
 
-export function Input({ place }: Props) {
+export function Input({icon, formProps, inputProps }: Props) {
   return (
-    <TextInput style={styles.input} placeholder={place} placeholderTextColor={"#000"} />
+    <Controller
+      render={({field}) => (
+        <View style={styles.group}>
+          <View style={styles.icon}>
+            <Feather name={icon} size={24} color="red" />
+          </View>
+          <TextInput style={styles.control}
+            placeholderTextColor={"#000"}
+            value={field.value}
+            onChangeText={field.onChange}
+            {...inputProps} />
+        </View>
+      )}
+      {...formProps}
+    />
+
   )
 }
