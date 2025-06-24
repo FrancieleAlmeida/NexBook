@@ -1,10 +1,21 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { Button } from '../components/button';
 
-export default function AboutScreen() {
+export default function ProfileScreen() {
   return (
     <View style={styles.container}>
-      <Text>Perfil NexBook</Text>
+      <Image
+        source={{ uri: 'https://i.pravatar.cc/150?img=65' }}
+        style={styles.avatar}
+      />
+
+      <Text style={styles.name}>Isabelle Rancan</Text>
+      <Text style={styles.email}>isabelle@email.com</Text>
+
+      <View>
+        <Button title="Sair" />
+      </View>
     </View>
   );
 }
@@ -12,7 +23,27 @@ export default function AboutScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-  }
-})
+    justifyContent: 'center',
+    padding: 24,
+    backgroundColor: '#101923',
+    color: '#fff',
+  },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 16,
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    color: '#fff',
+  },
+  email: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 24,
+  },
+});
