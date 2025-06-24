@@ -1,6 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+<<<<<<< Updated upstream
 import Carousel from '@/components/Carrousel';
+=======
+import Carousel from '../../components/Carrousel/Carrousel';
+>>>>>>> Stashed changes
 
 export default function HomeScreen() {
   return (

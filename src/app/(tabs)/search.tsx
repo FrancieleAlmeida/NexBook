@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+<<<<<<< Updated upstream
 import { View, TextInput, Button, FlatList, Text, StyleSheet, Image } from 'react-native';
 import Botao from '../../components/Botao';
+=======
+import { View, TextInput, FlatList, Text, StyleSheet, Image } from 'react-native';
+import { Button } from '../../components/button';
+
+>>>>>>> Stashed changes
 
 export default function SearchScreen() {
   const [searchTerm, setSearchTerm] = useState('');

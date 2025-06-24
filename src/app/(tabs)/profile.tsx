@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+<<<<<<< Updated upstream
 import Botao from '../../components/Botao';
 
+=======
+import { Button } from '../../components/button';
+>>>>>>> Stashed changes
 
 export default function ProfileScreen() {
   return (

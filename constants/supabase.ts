@@ -1,0 +1,2 @@
+export const supaUrl = 'https://thyewoaxamxaxqceldqi.supabase.co';
+export const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoeWV3b2F4YW14YXhxY2VsZHFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2NDAzNzQsImV4cCI6MjA2NjIxNjM3NH0.nzaHvvMHAGbuJly2zSCUTk3wD33kujtRdtM56DFc6zg';
