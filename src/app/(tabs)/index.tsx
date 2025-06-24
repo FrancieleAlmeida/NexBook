@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import Carousel from '../components/Carrousel/Carrousel';
+import Carousel from '../../components/Carrousel/Carrousel';
 
 export default function HomeScreen() {
   return (

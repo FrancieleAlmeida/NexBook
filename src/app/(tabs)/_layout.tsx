@@ -3,8 +3,8 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={({ route }) => ({
+    <Tabs 
+      screenOptions={({ route, }) => ({
           tabBarActiveTintColor: '#fff',
           tabBarInactiveTintColor: '#999',    
           tabBarStyle: {

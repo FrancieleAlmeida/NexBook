@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, FlatList, Text, StyleSheet, Image } from 'react-native';
-import { Button } from '../components/button';
+import { Button } from '../../components/button';
 
 
 export default function SearchScreen() {

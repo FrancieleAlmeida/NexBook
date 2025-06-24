@@ -1,8 +1,21 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Button } from '../components/button';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { Button } from '../../components/button';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function ProfileScreen() {
+  const { setAuth, user } = useAuth()
+
+  async function handleLogout() {
+    const { error } = await supabase.auth.signOut();
+    setAuth(null)
+
+    if (error) {
+      Alert.alert('Error', "Erro ao sair da conta, tente novamente mais tarde")
+      return
+    }
+  }
   return (
     <View style={styles.container}>
       <Image
@@ -10,12 +23,11 @@ export default function ProfileScreen() {
         style={styles.avatar}
       />
 
-      <Text style={styles.name}>Isabelle Rancan</Text>
-      <Text style={styles.email}>isabelle@email.com</Text>
+      <Text style={styles.name}>{user?.user_metadata.name}</Text>
+      <Text style={styles.subname}>@{user?.user_metadata.user}</Text>
+      <Text style={styles.email}>{user?.email}</Text>
 
-      <View>
-        <Button title="Sair" />
-      </View>
+      <Button title="Sair" onPress={handleLogout} />
     </View>
   );
 }
@@ -25,7 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
+    padding: 16,
     backgroundColor: '#101923',
     color: '#fff',
   },
@@ -40,6 +52,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 4,
     color: '#fff',
+  },
+  subname: {
+    fontSize: 14,
+    marginBottom: 4,
+    color: '#666',
   },
   email: {
     fontSize: 16,
