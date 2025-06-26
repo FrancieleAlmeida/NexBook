@@ -3,181 +3,171 @@ import {
   View,
   Text,
   FlatList,
-  Image,
   StyleSheet,
+  ActivityIndicator,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  getFavoritesByUser,
+  Favorite,
+  FavoriteStatus,
+  removeFavorite,
+  updateFavoriteStatus, // função que vamos criar abaixo
+} from '@/services/favorites';
 
-type Book = {
-  id: string;
-  title: string;
-  authors: string[];
-  thumbnail: string | null;
-};
+type Props = {};
 
-const FAVORITES_KEY = '@favorite_books';
+export default function FavoritesScreen(props: Props) {
+  const { user } = useAuth();
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [loading, setLoading] = useState(false);
 
-export default function Favorites() {
-  const [favorites, setFavorites] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadFavorites = async () => {
+  const fetchFavorites = async () => {
+    if (!user) return;
+    setLoading(true);
     try {
-      const jsonValue = await AsyncStorage.getItem(FAVORITES_KEY);
-      if (jsonValue != null) {
-        setFavorites(JSON.parse(jsonValue));
-      }
-    } catch (e) {
-      console.error('Erro ao carregar favoritos', e);
+      const favs = await getFavoritesByUser(user.id);
+      setFavorites(favs);
+    } catch (error) {
+      Alert.alert('Erro', 'Falha ao carregar favoritos');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadFavorites();
-  }, []);
+    fetchFavorites();
+  }, [user]);
 
-  const removeFavorite = async (id: string) => {
-    Alert.alert(
-      'Remover favorito',
-      'Tem certeza que quer remover este livro dos favoritos?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Remover',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const newFavorites = favorites.filter(book => book.id !== id);
-              setFavorites(newFavorites);
-              await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
-            } catch (e) {
-              console.error('Erro ao remover favorito', e);
-            }
-          },
+  const handleRemove = (bookId: string) => {
+    Alert.alert('Remover favorito', 'Deseja remover este livro dos favoritos?', [
+      {
+        text: 'Cancelar',
+        style: 'cancel',
+      },
+      {
+        text: 'Remover',
+        style: 'destructive',
+        onPress: async () => {
+          if (!user) return;
+          try {
+            await removeFavorite(user.id, bookId);
+            fetchFavorites();
+          } catch {
+            Alert.alert('Erro', 'Não foi possível remover o favorito');
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
-  const renderBook = ({ item }: { item: Book }) => (
-    <View style={styles.bookContainer}>
-      {item.thumbnail ? (
-        <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
-      ) : (
-        <View style={[styles.thumbnail, styles.noImage]}>
-          <Text style={{ color: '#aaa', fontSize: 12 }}>Sem imagem</Text>
-        </View>
-      )}
-      <View style={styles.bookInfo}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.authors}>{item.authors.join(', ')}</Text>
+  const handleChangeStatus = async (bookId: string, currentStatus: FavoriteStatus) => {
+    if (!user) return;
+    const statusCycle: FavoriteStatus[] = ['concluido', 'futuramente', 'lendo'];
+    const currentIndex = statusCycle.indexOf(currentStatus);
+    const nextStatus = statusCycle[(currentIndex + 1) % statusCycle.length];
+
+    try {
+      await updateFavoriteStatus(user.id, bookId, nextStatus);
+      fetchFavorites();
+    } catch {
+      Alert.alert('Erro', 'Não foi possível atualizar o status');
+    }
+  };
+
+  const renderItem = ({ item }: { item: Favorite }) => (
+    <View style={styles.favoriteItem}>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.bookId}>ID do livro: {item.book_id}</Text>
+        <Text>Status: {item.status}</Text>
       </View>
+
       <TouchableOpacity
-        onPress={() => removeFavorite(item.id)}
-        style={styles.removeButton}
+        style={styles.statusButton}
+        onPress={() => handleChangeStatus(item.book_id, item.status)}
       >
+        <Text style={styles.statusButtonText}>Mudar status</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.removeButton} onPress={() => handleRemove(item.book_id)}>
         <Text style={styles.removeButtonText}>Remover</Text>
       </TouchableOpacity>
     </View>
   );
 
+  if (!user) {
+    return (
+      <View style={styles.centered}>
+        <Text>Você precisa estar logado para ver os favoritos.</Text>
+      </View>
+    );
+  }
+
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text>Carregando favoritos...</Text>
-      </SafeAreaView>
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
+  if (favorites.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>Você ainda não tem favoritos.</Text>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Meus Favoritos</Text>
-
-      {favorites.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Você ainda não tem livros favoritos.</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={favorites}
-          keyExtractor={(item) => item.id}
-          renderItem={renderBook}
-          contentContainerStyle={{ paddingBottom: 40, paddingHorizontal: 16 }}
-        />
-      )}
-    </SafeAreaView>
+    <FlatList
+      data={favorites}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+      contentContainerStyle={styles.list}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  header: {
-    fontSize: 28,
-    fontWeight: 'bold',
+  list: {
     padding: 16,
-    color: '#222',
   },
-  bookContainer: {
+  favoriteItem: {
     flexDirection: 'row',
-    marginBottom: 16,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 10,
-    padding: 10,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    paddingVertical: 12,
   },
-  thumbnail: {
-    width: 70,
-    height: 100,
+  bookId: {
+    fontWeight: 'bold',
+  },
+  statusButton: {
+    backgroundColor: '#007AFF',
+    padding: 8,
     borderRadius: 6,
-    backgroundColor: '#ddd',
+    marginHorizontal: 8,
   },
-  noImage: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bookInfo: {
-    flex: 1,
-    paddingLeft: 12,
-    justifyContent: 'center',
-  },
-  title: {
-    fontWeight: '700',
-    fontSize: 16,
-    color: '#111',
-  },
-  authors: {
-    color: '#666',
-    marginTop: 4,
+  statusButtonText: {
+    color: '#fff',
   },
   removeButton: {
-    backgroundColor: '#ff3b30',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    backgroundColor: '#FF3B30',
+    padding: 8,
     borderRadius: 6,
   },
   removeButtonText: {
     color: '#fff',
-    fontWeight: '600',
   },
-  emptyContainer: {
+  separator: {
+    height: 1,
+    backgroundColor: '#ddd',
+  },
+  centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 40,
-  },
-  emptyText: {
-    fontSize: 18,
-    color: '#555',
-    textAlign: 'center',
   },
 });

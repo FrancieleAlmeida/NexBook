@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  View,
   TextInput,
   FlatList,
   Text,
-  Image,
   StyleSheet,
   ActivityIndicator,
-  Pressable,
   SafeAreaView,
+  NativeSyntheticEvent,
+  TextInputSubmitEditingEventData,
 } from 'react-native';
-import { router } from 'expo-router';
-
 import { searchBooks, Book } from '@/services/api';
+import BookItem from '@/components/bookItem';
+
+const MAX_RESULTS = 20;
+const SEARCH_DEBOUNCE_DELAY = 1000;
 
 export default function Search() {
   const [query, setQuery] = useState('');
@@ -21,30 +22,19 @@ export default function Search() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [startIndex, setStartIndex] = useState(0);
-  const maxResults = 20;
-
-  const debounceTimeout = useRef<number | null>(null);
+  const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
 
   const fetchBooks = async (searchTerm: string, loadMore = false, index = 0) => {
-    if (!searchTerm.trim()) {
-      setBooks([]);
-      setLoading(false);
-      return;
-    }
-
-    if (loading || loadingMore) return;
+    if (!searchTerm.trim() || loading || loadingMore) return;
 
     loadMore ? setLoadingMore(true) : setLoading(true);
     setError(null);
 
     try {
-      const newBooks = await searchBooks(searchTerm, index, maxResults);
-      if (loadMore) {
-        setBooks(prev => [...prev, ...newBooks]);
-      } else {
-        setBooks(newBooks);
-      }
-      setStartIndex(index + maxResults);
+      const newBooks = await searchBooks(searchTerm, index, MAX_RESULTS);
+      setBooks((prev) => (loadMore ? [...prev, ...newBooks] : newBooks));
+      setStartIndex(index + MAX_RESULTS);
     } catch {
       setError('Erro ao buscar livros');
       if (!loadMore) setBooks([]);
@@ -53,40 +43,21 @@ export default function Search() {
     }
   };
 
-
   useEffect(() => {
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
-
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
     debounceTimeout.current = setTimeout(() => {
       setStartIndex(0);
       fetchBooks(query, false, 0);
-    }, 500);
+    }, SEARCH_DEBOUNCE_DELAY);
 
     return () => {
       if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
     };
   }, [query]);
 
-  const renderBook = ({ item }: { item: Book }) => (
-    <Pressable
-      onPress={() => router.push({ pathname: '/(tabs)/BookDetails', params: { id: item.id } })}
-      style={({ pressed }) => [styles.bookCard, pressed && { opacity: 0.7 }]}
-    >
-      {item.thumbnail ? (
-        <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
-      ) : (
-        <View style={[styles.thumbnail, styles.noImage]}>
-          <Text style={styles.noImageText}>Sem imagem</Text>
-        </View>
-      )}
-      <View style={styles.bookInfo}>
-        <Text style={styles.bookTitle} numberOfLines={2}>{item.title}</Text>
-        <Text style={styles.bookAuthors} numberOfLines={1}>{item.authors.join(', ')}</Text>
-      </View>
-    </Pressable>
-  );
+  const handleSubmit = (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
+    fetchBooks(query, false, 0);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -95,23 +66,38 @@ export default function Search() {
         placeholder="Pesquisar livros..."
         value={query}
         onChangeText={setQuery}
+        onSubmitEditing={handleSubmit}
+        returnKeyType="search"
         autoCorrect={false}
         autoCapitalize="none"
         clearButtonMode="while-editing"
       />
 
-      {loading && !loadingMore && <ActivityIndicator size="large" color="#007AFF" style={{ marginTop: 20 }} />}
+      {loading && !loadingMore && (
+        <ActivityIndicator size="large" color="#007AFF" style={{ marginTop: 20 }} />
+      )}
+
       {error && <Text style={styles.error}>{error}</Text>}
 
       <FlatList
         data={books}
         keyExtractor={(item) => item.id}
-        renderItem={renderBook}
+        renderItem={({ item }) => <BookItem item={item} />}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
-        onEndReached={() => fetchBooks(query, true, startIndex)}
+        initialNumToRender={10}
+        removeClippedSubviews
+        onEndReached={() => {
+          if (!onEndReachedCalledDuringMomentum && !loadingMore && books.length >= MAX_RESULTS) {
+            fetchBooks(query, true, startIndex);
+            setOnEndReachedCalledDuringMomentum(true);
+          }
+        }}
+        onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={loadingMore ? <ActivityIndicator size="small" color="#007AFF" /> : null}
+        ListFooterComponent={loadingMore ? (
+          <ActivityIndicator size="small" color="#007AFF" />
+        ) : null}
         ListEmptyComponent={
           !loading && query.trim() !== '' ? (
             <Text style={styles.noResults}>Nenhum livro encontrado.</Text>
@@ -140,47 +126,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     elevation: 3,
-  },
-  bookCard: {
-    flexDirection: 'row',
-    marginTop: 16,
-    backgroundColor: '#fff',
-    borderRadius: 14,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  thumbnail: {
-    width: 70,
-    height: 100,
-    borderRadius: 8,
-    backgroundColor: '#E5E7EB',
-  },
-  noImage: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noImageText: {
-    color: '#9CA3AF',
-    fontSize: 12,
-  },
-  bookInfo: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: 'center',
-  },
-  bookTitle: {
-    fontWeight: '700',
-    fontSize: 16,
-    color: '#111827',
-  },
-  bookAuthors: {
-    marginTop: 4,
-    fontSize: 14,
-    color: '#6B7280',
   },
   error: {
     color: 'red',
