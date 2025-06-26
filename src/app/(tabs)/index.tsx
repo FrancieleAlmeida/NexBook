@@ -1,39 +1,63 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import Carousel from '../../components/Carrousel/Carrousel';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+  StyleSheet,
+} from 'react-native';
 
-export default function HomeScreen() {
+import { categories, publishers, authors } from '@/constants/bookSections';
+import BooksSection from '@/components/booksSection';
+
+export default function Home() {
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.appName}>NexBook</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={styles.header}>NextBook</Text>
 
-      <Text style={styles.sectionTitle}>🎁 Novos</Text>
-      <Carousel type="novos" />
+        {categories.map(({ title, query }) => (
+          <BooksSection key={title} title={title} query={query} />
+        ))}
 
-      <Text style={styles.sectionTitle}>⭐ Populares</Text>
-      <Carousel type="populares" />
-    </ScrollView>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Principais Editoras</Text>
+          {publishers.map(({ name, query }) => (
+            <BooksSection key={name} title={name} query={query} />
+          ))}
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Principais Autores</Text>
+          {authors.map(({ name, query }) => (
+            <BooksSection key={name} title={name} query={query} />
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#101923',
-    paddingTop: 40,
-    paddingHorizontal: 16,
+    backgroundColor: '#F8FAFC',
   },
-  appName: {
-    fontSize: 28,
+  header: {
+    fontSize: 36,
     fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#fff',
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    color: '#111827',
+  },
+  sectionContainer: {
+    marginBottom: 28,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
-    marginTop: 24,
+    paddingHorizontal: 16,
     marginBottom: 12,
-    color: '#fff',
+    color: '#1F2937',
   },
 });

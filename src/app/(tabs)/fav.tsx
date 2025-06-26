@@ -1,93 +1,183 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Alert,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function FavoritosScreen() {
-  const livrosLidos = [
-    {
-      id: '1',
-      title: '1984',
-      author: 'George Orwell',
-      image: 'https://via.placeholder.com/80x120.png?text=1984',
-    },
-    {
-      id: '2',
-      title: 'Dom Casmurro',
-      author: 'Machado de Assis',
-      image: 'https://via.placeholder.com/80x120.png?text=Casmurro',
-    },
-  ];
+type Book = {
+  id: string;
+  title: string;
+  authors: string[];
+  thumbnail: string | null;
+};
 
-  const livrosParaLer = [
-    {
-      id: '3',
-      title: 'O Hobbit',
-      author: 'J.R.R. Tolkien',
-      image: 'https://via.placeholder.com/80x120.png?text=Hobbit',
-    },
-    {
-      id: '4',
-      title: 'Orgulho e Preconceito',
-      author: 'Jane Austen',
-      image: 'https://via.placeholder.com/80x120.png?text=Orgulho',
-    },
-  ];
+const FAVORITES_KEY = '@favorite_books';
 
-  const renderLivro = (livro: { title: string; author: string; image: string; id: string }) => (
-    <View key={livro.id} style={styles.bookItem}>
-      <Image source={{ uri: livro.image }} style={styles.bookImage} />
+export default function Favorites() {
+  const [favorites, setFavorites] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadFavorites = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(FAVORITES_KEY);
+      if (jsonValue != null) {
+        setFavorites(JSON.parse(jsonValue));
+      }
+    } catch (e) {
+      console.error('Erro ao carregar favoritos', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadFavorites();
+  }, []);
+
+  const removeFavorite = async (id: string) => {
+    Alert.alert(
+      'Remover favorito',
+      'Tem certeza que quer remover este livro dos favoritos?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Remover',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const newFavorites = favorites.filter(book => book.id !== id);
+              setFavorites(newFavorites);
+              await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
+            } catch (e) {
+              console.error('Erro ao remover favorito', e);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const renderBook = ({ item }: { item: Book }) => (
+    <View style={styles.bookContainer}>
+      {item.thumbnail ? (
+        <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
+      ) : (
+        <View style={[styles.thumbnail, styles.noImage]}>
+          <Text style={{ color: '#aaa', fontSize: 12 }}>Sem imagem</Text>
+        </View>
+      )}
       <View style={styles.bookInfo}>
-        <Text style={styles.bookTitle}>{livro.title}</Text>
-        <Text style={styles.bookAuthor}>{livro.author}</Text>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.authors}>{item.authors.join(', ')}</Text>
       </View>
+      <TouchableOpacity
+        onPress={() => removeFavorite(item.id)}
+        style={styles.removeButton}
+      >
+        <Text style={styles.removeButtonText}>Remover</Text>
+      </TouchableOpacity>
     </View>
   );
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.sectionTitle}>📖 Lidos</Text>
-      {livrosLidos.map(renderLivro)}
+  if (loading) {
+    return (
+      <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text>Carregando favoritos...</Text>
+      </SafeAreaView>
+    );
+  }
 
-      <Text style={styles.sectionTitle}>📚 Para Ler</Text>
-      {livrosParaLer.map(renderLivro)}
-    </ScrollView>
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Meus Favoritos</Text>
+
+      {favorites.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Você ainda não tem livros favoritos.</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={favorites}
+          keyExtractor={(item) => item.id}
+          renderItem={renderBook}
+          contentContainerStyle={{ paddingBottom: 40, paddingHorizontal: 16 }}
+        />
+      )}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 24,
-    backgroundColor: '#101923',
-  },
-  sectionTitle: {
-    fontSize: 20,
+  container: { flex: 1, backgroundColor: '#fff' },
+  header: {
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
-    marginTop: 24,
-    marginBottom: 12,
+    padding: 16,
+    color: '#222',
   },
-  bookItem: {
+  bookContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: 16,
-    paddingBottom: 8,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
-  bookImage: {
-    width: 80,
-    height: 120,
-    borderRadius: 4,
-    marginRight: 16,
+  thumbnail: {
+    width: 70,
+    height: 100,
+    borderRadius: 6,
+    backgroundColor: '#ddd',
+  },
+  noImage: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   bookInfo: {
     flex: 1,
+    paddingLeft: 12,
+    justifyContent: 'center',
   },
-  bookTitle: {
+  title: {
+    fontWeight: '700',
     fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#fff',
+    color: '#111',
   },
-  bookAuthor: {
-    fontSize: 14,
+  authors: {
+    color: '#666',
+    marginTop: 4,
+  },
+  removeButton: {
+    backgroundColor: '#ff3b30',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  removeButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 40,
+  },
+  emptyText: {
+    fontSize: 18,
     color: '#555',
+    textAlign: 'center',
   },
 });
