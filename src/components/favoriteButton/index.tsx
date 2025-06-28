@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { View } from 'react-native';
+import { Menu, IconButton } from 'react-native-paper';
+
 import { useAuth } from '@/contexts/AuthContext';
-import {
-  addOrUpdateFavorite,
-  removeFavorite,
-  FavoriteStatus,
-  getFavoritesByUser,
-  Favorite,
-} from '@/services/favorites';
+import { getFavoritesByUser, addOrUpdateFavorite, removeFavorite, FavoriteStatus, Favorite, } from '@/services/favorites';
+import { supabase } from '@/lib/supabase';
+import { styles } from './style';
 
 type BookInfo = {
   id: string;
@@ -21,144 +18,75 @@ type Props = {
   book: BookInfo;
 };
 
-const STATUS_LABELS: Record<FavoriteStatus, string> = {
-  concluido: 'Concluído',
-  futuramente: 'Ler futuramente',
-  lendo: 'Lendo recentemente',
-};
-
-export default function FavoriteButton({ book }: Props) {
+const FavoriteButton = ({ book }: Props) => {
   const { user } = useAuth();
-
+  const [menuVisible, setMenuVisible] = useState(false);
   const [favoriteStatus, setFavoriteStatus] = useState<FavoriteStatus | null>(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
 
-    async function fetchFavorite() {
-      setLoading(true);
-      try {
-        const favorites: Favorite[] = await getFavoritesByUser(user!.id);
-        const fav = favorites.find((f) => f.book_id === book.id);
-        if (fav) setFavoriteStatus(fav.status);
-        else setFavoriteStatus(null);
-      } catch (error) {
-        console.error('Erro ao carregar favoritos:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
+    const fetchStatus = async () => {
+      const favorites: Favorite[] = await getFavoritesByUser(user.id);
+      const found = favorites.find((f) => f.book_id === book.id);
+      if (found) setFavoriteStatus(found.status);
+      else setFavoriteStatus(null);
+    };
 
-    fetchFavorite();
+    fetchStatus();
   }, [user?.id, book.id]);
 
   const toggleFavorite = async (status: FavoriteStatus) => {
-    if (!user?.id) return;
-    setLoading(true);
+    if (!user) return;
 
-    try {
-      if (favoriteStatus === status) {
-        await removeFavorite(user.id, book.id);
-        setFavoriteStatus(null);
-      } else {
-        await addOrUpdateFavorite(user.id, book, status);
-        setFavoriteStatus(status);
-      }
-    } catch (error) {
-      console.error('Erro ao atualizar favorito:', error);
-    } finally {
-      setLoading(false);
+    if (favoriteStatus === status) {
+      await removeFavorite(user.id, book.id);
+      setFavoriteStatus(null);
+    } else {
+      await addOrUpdateFavorite(supabase, user.id, book, status);
+      setFavoriteStatus(status);
     }
+
+    setMenuVisible(false);
   };
 
-  if (!user) {
-    return (
-      <View style={styles.notLogged}>
-        <Text>Faça login para favoritar</Text>
-      </View>
-    );
-  }
+  const statusColors: Record<FavoriteStatus, string> = {
+    concluido: '#4CAF50',
+    futuramente: '#FFA500',
+    lendo: '#1E90FF',
+  };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.button, favoriteStatus === 'concluido' && styles.activeButton]}
-        onPress={() => toggleFavorite('concluido')}
-        disabled={loading}
-      >
-        <Feather
-          name="check-circle"
-          size={24}
-          color={favoriteStatus === 'concluido' ? 'white' : '#007AFF'}
-        />
-        <Text style={[styles.label, favoriteStatus === 'concluido' && styles.activeLabel]}>
-          {STATUS_LABELS['concluido']}
-        </Text>
-      </TouchableOpacity>
+      <Menu
+        visible={menuVisible}
+        onDismiss={() => setMenuVisible(false)}
+        anchor={
+          <IconButton
+            icon={favoriteStatus ? 'bookmark' : 'bookmark-outline'}
+            iconColor={favoriteStatus ? statusColors[favoriteStatus] : '#000'}
+            size={40}
+            onPress={() => setMenuVisible(true)}
+          />
 
-      <TouchableOpacity
-        style={[styles.button, favoriteStatus === 'futuramente' && styles.activeButton]}
-        onPress={() => toggleFavorite('futuramente')}
-        disabled={loading}
+        }
       >
-        <Feather
-          name="clock"
-          size={24}
-          color={favoriteStatus === 'futuramente' ? 'white' : '#007AFF'}
+        <Menu.Item
+          onPress={() => toggleFavorite('concluido')}
+          title="✅ Concluído"
         />
-        <Text style={[styles.label, favoriteStatus === 'futuramente' && styles.activeLabel]}>
-          {STATUS_LABELS['futuramente']}
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, favoriteStatus === 'lendo' && styles.activeButton]}
-        onPress={() => toggleFavorite('lendo')}
-        disabled={loading}
-      >
-        <Feather
-          name="book"
-          size={24}
-          color={favoriteStatus === 'lendo' ? 'white' : '#007AFF'}
+        <Menu.Item
+          onPress={() => toggleFavorite('futuramente')}
+          title="🕒 Ler futuramente"
         />
-        <Text style={[styles.label, favoriteStatus === 'lendo' && styles.activeLabel]}>
-          {STATUS_LABELS['lendo']}
-        </Text>
-      </TouchableOpacity>
+        <Menu.Item
+          onPress={() => toggleFavorite('lendo')}
+          title="📖 Lendo recentemente"
+        />
+      </Menu>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 12,
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#e6f0ff',
-    padding: 10,
-    borderRadius: 8,
-    flex: 1,
-    marginHorizontal: 4,
-  },
-  activeButton: {
-    backgroundColor: '#007AFF',
-  },
-  label: {
-    marginTop: 4,
-    color: '#007AFF',
-    fontWeight: '600',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  activeLabel: {
-    color: 'white',
-  },
-  notLogged: {
-    padding: 16,
-    alignItems: 'center',
-  },
-});
+
+export default FavoriteButton;

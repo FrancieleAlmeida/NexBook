@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  TextInput,
-  FlatList,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  SafeAreaView,
-  NativeSyntheticEvent,
+  TextInput, FlatList, Text, StyleSheet, ActivityIndicator, SafeAreaView, NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
 } from 'react-native';
 import { searchBooks, Book } from '@/services/api';
@@ -25,6 +19,8 @@ export default function Search() {
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
 
+  const flatListRef = useRef<FlatList>(null);
+
   const fetchBooks = async (searchTerm: string, loadMore = false, index = 0) => {
     if (!searchTerm.trim() || loading || loadingMore) return;
 
@@ -35,6 +31,10 @@ export default function Search() {
       const newBooks = await searchBooks(searchTerm, index, MAX_RESULTS);
       setBooks((prev) => (loadMore ? [...prev, ...newBooks] : newBooks));
       setStartIndex(index + MAX_RESULTS);
+
+      if (!loadMore) {
+        flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+      }
     } catch {
       setError('Erro ao buscar livros');
       if (!loadMore) setBooks([]);
@@ -80,8 +80,9 @@ export default function Search() {
       {error && <Text style={styles.error}>{error}</Text>}
 
       <FlatList
+        ref={flatListRef} 
         data={books}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => item.id + '-' + index} 
         renderItem={({ item }) => <BookItem item={item} />}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}

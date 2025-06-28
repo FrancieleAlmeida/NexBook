@@ -2,15 +2,16 @@ import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { router } from 'expo-router';
 
-
-
 import { Input } from '../../components/input';
 import { Button } from '../../components/button';
-import { styles } from './style';
+import { styles } from './_style';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Register() {
   const { control, handleSubmit, formState: { isSubmitting } } = useForm()
+  const { setAuth } = useAuth();
+
 
   async function handleRegister(data: any) {
     const { email, senha, name, user } = data
@@ -19,7 +20,7 @@ export default function Register() {
       Alert.alert('Campo Obrigatorio', 'Nome e usurio deve ter pelo menos 3 letras');
       return;
     }
-    const { error } = await supabase.auth.signUp({
+    const { data: sessionData, error } = await supabase.auth.signUp({
       email: email,
       password: senha,
       options: {
@@ -28,14 +29,17 @@ export default function Register() {
           user: user,
         }
       }
-    })
+    });
 
     if (error) {
       Alert.alert("error", error.message)
       return
     }
-    Alert.alert("Cadastro realizado", "Usuário cadastrado!.");
-    router.replace("/auth/login");
+    if (sessionData?.session?.user) {
+      setAuth(sessionData.session.user);
+      Alert.alert("Cadastro realizado", "Usuário cadastrado!");
+      router.replace("/(tabs)");
+    }
 
   }
 

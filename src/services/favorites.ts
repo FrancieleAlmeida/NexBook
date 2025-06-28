@@ -1,4 +1,6 @@
-import { supabase } from '@/constants/supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
+
 
 export type FavoriteStatus = 'concluido' | 'futuramente' | 'lendo';
 
@@ -8,10 +10,15 @@ export type Favorite = {
   book_id: string;
   status: FavoriteStatus;
   created_at: string;
+  title?: string;
+  authors?: string;
+  thumbnail?: string | null;
 };
 
 export async function addOrUpdateFavorite(
+  supabaseClient: SupabaseClient,
   userId: string,
+
   book: {
     id: string;
     title: string;
@@ -20,7 +27,7 @@ export async function addOrUpdateFavorite(
   },
   status: FavoriteStatus
 ): Promise<void> {
-  const { data: existing, error: fetchError } = await supabase
+  const { data: existing, error: fetchError } = await supabaseClient
     .from('favorites')
     .select('*')
     .eq('user_id', userId)
@@ -32,7 +39,7 @@ export async function addOrUpdateFavorite(
   }
 
   if (existing) {
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('favorites')
       .update({ status })
       .eq('user_id', userId)
@@ -40,11 +47,14 @@ export async function addOrUpdateFavorite(
 
     if (error) throw error;
   } else {
-    const { error } = await supabase.from('favorites').insert([
+    const { error } = await supabaseClient.from('favorites').insert([
       {
         user_id: userId,
         book_id: book.id,
         status,
+        title: book.title,
+        authors: book.authors?.join(', ') || null,
+        thumbnail: book.thumbnail || null,
       },
     ]);
 
@@ -73,7 +83,7 @@ export async function getFavoritesByUser(userId: string): Promise<Favorite[]> {
   return data || [];
 }
 
-// NOVA função para atualizar só o status, sem precisar do objeto book completo
+
 export async function updateFavoriteStatus(
   userId: string,
   bookId: string,

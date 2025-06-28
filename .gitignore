@@ -3,7 +3,8 @@
 # dependencies
 node_modules/
 .vscode
-constants/
+constants/books.ts
+constants/supabase.ts
 # Expo
 .expo/
 dist/

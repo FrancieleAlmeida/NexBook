@@ -3,6 +3,7 @@ import { Feather } from "@expo/vector-icons"
 import { Controller, UseControllerProps } from "react-hook-form"
 
 import { styles } from "./style";
+
 type Props = {
   icon: keyof typeof Feather.glyphMap;
   formProps: UseControllerProps;

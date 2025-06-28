@@ -55,14 +55,14 @@ export const styles = StyleSheet.create({
     fontSize: 16,
   },
   header: {
-  position: 'relative',
-  alignItems: 'center',
-},
-favoriteButton: {
-  position: 'absolute',
-  top: 0,
-  right: 10,
-  padding: 8,
-},
+    position: 'relative',
+    alignItems: 'center',
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: 0,
+    right: 10,
+    padding: 8,
+  },
 
 });

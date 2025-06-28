@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-  StyleSheet,
-} from 'react-native';
-
+import { SafeAreaView, ScrollView, Text, View, StyleSheet, } from 'react-native';
 import { categories, publishers, authors } from '@/constants/bookSections';
 import BooksSection from '@/components/booksSection';
+
 
 export default function Home() {
   return (

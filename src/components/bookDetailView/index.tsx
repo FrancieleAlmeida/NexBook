@@ -1,13 +1,8 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
-import FavoriteButton from '@/components/favoriteButton'; // ✅ já importado
+import {  View,  Text,  Image,  ScrollView,  TouchableOpacity,  Linking,} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+import FavoriteButton from '@/components/favoriteButton';
 import { styles } from './style';
 
 type Props = {
@@ -36,61 +31,64 @@ export default function BookDetailView({ book }: Props) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        {book.thumbnail ? (
-          <Image source={{ uri: book.thumbnail }} style={styles.thumbnail} />
-        ) : (
-          <View style={[styles.thumbnail, styles.noImage]}>
-            <Text>Sem imagem</Text>
-          </View>
+    <View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.favoriteButton}>
+          <FavoriteButton book={book} />
+        </View>
+        <View style={styles.header}>
+          {book.thumbnail ? (
+            <Image source={{ uri: book.thumbnail }} style={styles.thumbnail} />
+          ) : (
+            <View style={[styles.thumbnail, styles.noImage]}>
+              <Ionicons name="book-outline" size={130} color="#000" />
+            </View>
+          )}
+        </View>
+
+        <Text style={styles.title}>{book.title}</Text>
+        <Text style={styles.authors}>Autor(es): {book.authors.join(', ')}</Text>
+
+        {book.publisher && <Text style={styles.info}>Editora: {book.publisher}</Text>}
+        {book.publishedDate && <Text style={styles.info}>Publicado em: {book.publishedDate}</Text>}
+        {book.pageCount !== null && <Text style={styles.info}>Páginas: {book.pageCount}</Text>}
+
+        {book.averageRating !== null && (
+          <Text style={styles.info}>
+            Nota média: {book.averageRating} ({book.ratingsCount ?? 0} avaliações)
+          </Text>
         )}
-      </View>
 
-      <Text style={styles.title}>{book.title}</Text>
-      <Text style={styles.authors}>Autor(es): {book.authors.join(', ')}</Text>
+        {book.maturityRating && (
+          <Text style={styles.info}>
+            Classificação: {book.maturityRating === 'NOT_MATURE' ? 'Livre' : 'Adulto'}
+          </Text>
+        )}
 
-      {/* ✅ Componente novo de favoritos */}
-      <FavoriteButton book={book} />
+        {book.language && <Text style={styles.info}>Idioma: {book.language.toUpperCase()}</Text>}
 
-      {book.publisher && <Text style={styles.info}>Editora: {book.publisher}</Text>}
-      {book.publishedDate && <Text style={styles.info}>Publicado em: {book.publishedDate}</Text>}
-      {book.pageCount !== null && <Text style={styles.info}>Páginas: {book.pageCount}</Text>}
+        {book.categories && (
+          <Text style={styles.info}>Categorias: {book.categories.join(', ')}</Text>
+        )}
 
-      {book.averageRating !== null && (
-        <Text style={styles.info}>
-          Nota média: {book.averageRating} ({book.ratingsCount ?? 0} avaliações)
-        </Text>
-      )}
+        <Text style={styles.description}>{book.description}</Text>
 
-      {book.maturityRating && (
-        <Text style={styles.info}>
-          Classificação: {book.maturityRating === 'NOT_MATURE' ? 'Livre' : 'Adulto'}
-        </Text>
-      )}
+        {book.previewLink && (
+          <TouchableOpacity style={styles.button} onPress={() => openLink(book.previewLink)}>
+            <Text style={styles.buttonText}>Ver prévia no Google Books</Text>
+          </TouchableOpacity>
+        )}
 
-      {book.language && <Text style={styles.info}>Idioma: {book.language.toUpperCase()}</Text>}
-
-      {book.categories && (
-        <Text style={styles.info}>Categorias: {book.categories.join(', ')}</Text>
-      )}
-
-      <Text style={styles.description}>{book.description}</Text>
-
-      {book.previewLink && (
-        <TouchableOpacity style={styles.button} onPress={() => openLink(book.previewLink)}>
-          <Text style={styles.buttonText}>Ver prévia no Google Books</Text>
-        </TouchableOpacity>
-      )}
-
-      {book.buyLink && (
-        <TouchableOpacity
-          style={[styles.button, styles.buyButton]}
-          onPress={() => openLink(book.buyLink)}
-        >
-          <Text style={styles.buttonText}>Comprar livro</Text>
-        </TouchableOpacity>
-      )}
-    </ScrollView>
+        {book.buyLink && (
+          <TouchableOpacity
+            style={[styles.button, styles.buyButton]}
+            onPress={() => openLink(book.buyLink)}
+          >
+            <Text style={styles.buttonText}>Comprar livro</Text>
+          </TouchableOpacity>
+        )}
+      </ScrollView>
+    </View>
   );
 }
+

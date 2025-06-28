@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  ActivityIndicator,
-  Pressable,
-} from 'react-native';
+import {  View,  Text,  FlatList,  Image,  ActivityIndicator,  Pressable,} from 'react-native';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+
 import { searchBooks, Book } from '@/services/api';
 import { styles } from './style';
 
@@ -52,14 +47,14 @@ export default function BooksSection({ title, query }: BooksSectionProps) {
 
   const renderBook = ({ item }: { item: Book }) => (
     <Pressable
-      onPress={() => router.navigate({ pathname: '/(tabs)/BookDetails', params: { id: item.id } })}
+      onPress={() => router.navigate({ pathname: '/pages/BookDetails', params: { id: item.id } })}
       style={({ pressed }) => [styles.bookCard, pressed && { opacity: 0.7 }]}
     >
       {item.thumbnail ? (
         <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
       ) : (
         <View style={[styles.thumbnail, styles.noImage]}>
-          <Text style={styles.noImageText}>Sem imagem</Text>
+          <Ionicons name="book-outline" size={110} color="#000" />
         </View>
       )}
       <Text style={styles.bookTitle} numberOfLines={2}>
