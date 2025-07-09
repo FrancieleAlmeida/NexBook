@@ -15,10 +15,10 @@ export function Input({icon, formProps, inputProps }: Props) {
       render={({field}) => (
         <View style={styles.group}>
           <View style={styles.icon}>
-            <Feather name={icon} size={24} color="red" />
+            <Feather name={icon} size={24} color="#008400" />
           </View>
           <TextInput style={styles.control}
-            placeholderTextColor={"#000"}
+            placeholderTextColor={"#fff"}
             value={field.value}
             onChangeText={field.onChange}
             {...inputProps} />

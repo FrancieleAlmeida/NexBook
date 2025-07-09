@@ -14,10 +14,12 @@ export const styles = StyleSheet.create({
   group: {
     width: "100%",
     height: 56,
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     flexDirection: "row",
     alignItems: "center",
-    overflow: "hidden"
+    overflow: "hidden",
+    borderRadius: 10, 
+    marginVertical: 8,
   },
   icon: {
     height: 56,
@@ -25,12 +27,17 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
-    borderRightWidth: 3,
-    borderRightColor: "#f4f5f6",
+    borderRightWidth: 2,
+    borderRightColor: "#008400",
+    backgroundColor: "#1f1f1f", 
   },
   control: {
     flex: 1,
     paddingLeft: 16,
     fontSize: 16,
+    color: "#fff", 
+    backgroundColor: "#1f1f1f", 
+    borderRadius: 10,
+    height: 52,
   },
 })

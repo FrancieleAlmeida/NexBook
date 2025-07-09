@@ -1,6 +1,7 @@
 import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { router } from 'expo-router';
+import { ImageBackground } from 'react-native';
 
 
 
@@ -29,6 +30,7 @@ export default function Register() {
   }
 
   return (
+<<<<<<< Updated upstream
     <View style={styles.container}>
       <Text>Cadastre-se</Text>
       <Input
@@ -53,5 +55,42 @@ export default function Register() {
         <Button title="Cadastrar" onPress={handleSubmit(handleRegister)} />
       )}
     </View>
+=======
+    <ImageBackground 
+    source={require('../../../assets/images/imagem_fundo.png')} 
+    style={styles.background}
+    resizeMode="cover"
+  >
+      <View style={styles.overlay}>
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <Text style={[styles.title, { color: '#008400' }]}>Nex</Text>
+            <Text style={styles.title}>Book</Text>
+          </View>
+          <Input
+            icon='user'
+            formProps={{ name: "user", control }}
+            inputProps={{ placeholder: "Usuario" }} />
+          <Input
+            icon='user'
+            formProps={{ name: "name", control }}
+            inputProps={{ placeholder: "Nome" }} />
+          <Input
+            icon='mail'
+            formProps={{ name: "email", control, rules: { required: "Informe o email" } }}
+            inputProps={{ placeholder: "Email" }} />
+          <Input
+            icon='key'
+            formProps={{ name: "senha", control, rules: { required: "Informe a senha" } }}
+            inputProps={{ placeholder: "Senha" }} />
+          {isSubmitting ? (
+            <ActivityIndicator size="large" color="#000" />
+          ) : (
+            <Button title="Cadastrar" onPress={handleSubmit(handleRegister)} />
+          )}
+        </View>
+      </View>
+    </ImageBackground>
+>>>>>>> Stashed changes
   );
 }
