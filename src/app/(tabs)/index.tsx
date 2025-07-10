@@ -8,7 +8,10 @@ export default function Home() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.header}>NextBook</Text>
+        <View style={styles.titleContainer}>
+          <Text style={[styles.title, { color: '#008400' }]}>Nex</Text>
+          <Text style={styles.title}>Book</Text>
+        </View>
 
         {categories.map(({ title, query }) => (
           <BooksSection key={title} title={title} query={query} />
@@ -35,14 +38,8 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
-  },
-  header: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    color: '#111827',
+    paddingTop: 50,
+    backgroundColor: '#0C0C0E',
   },
   sectionContainer: {
     marginBottom: 28,
@@ -52,6 +49,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     paddingHorizontal: 16,
     marginBottom: 12,
-    color: '#1F2937',
+    color: '#fff',
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: '#fff',
+    textTransform: 'uppercase',
+    letterSpacing: 2,
   },
 });

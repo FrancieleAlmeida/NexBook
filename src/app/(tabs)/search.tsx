@@ -64,17 +64,19 @@ export default function Search() {
       <TextInput
         style={styles.searchInput}
         placeholder="Pesquisar livros..."
+        placeholderTextColor="#fff"
         value={query}
         onChangeText={setQuery}
         onSubmitEditing={handleSubmit}
         returnKeyType="search"
+        selectionColor="#008400"
         autoCorrect={false}
         autoCapitalize="none"
         clearButtonMode="while-editing"
       />
 
       {loading && !loadingMore && (
-        <ActivityIndicator size="large" color="#007AFF" style={{ marginTop: 20 }} />
+        <ActivityIndicator size="large" color="#008400" style={{ marginTop: 20 }} />
       )}
 
       {error && <Text style={styles.error}>{error}</Text>}
@@ -97,7 +99,7 @@ export default function Search() {
         onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
         onEndReachedThreshold={0.5}
         ListFooterComponent={loadingMore ? (
-          <ActivityIndicator size="small" color="#007AFF" />
+          <ActivityIndicator size="small" color="#008400" />
         ) : null}
         ListEmptyComponent={
           !loading && query.trim() !== '' ? (
@@ -112,14 +114,14 @@ export default function Search() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#0C0C0E',
     paddingTop: 10,
   },
   searchInput: {
     height: 50,
     marginHorizontal: 16,
     borderRadius: 12,
-    backgroundColor: '#fff',
+    backgroundColor: '#1f1f1f',
     paddingHorizontal: 16,
     fontSize: 16,
     shadowColor: '#000',
@@ -127,6 +129,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     elevation: 3,
+    color: "#fff",
   },
   error: {
     color: 'red',

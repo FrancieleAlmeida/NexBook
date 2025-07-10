@@ -16,7 +16,7 @@ export default function BookItem({ item }: { item: Book }) {
         <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
       ) : (
         <View style={[styles.thumbnail, styles.noImage]}>
-          <Ionicons name="book-outline" size={60} color="#000" />
+          <Ionicons name="book-outline" size={60} color="#A1A1AA" />
         </View>
       )}
       <View style={styles.bookInfo}>

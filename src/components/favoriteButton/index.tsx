@@ -64,7 +64,7 @@ const FavoriteButton = ({ book }: Props) => {
         anchor={
           <IconButton
             icon={favoriteStatus ? 'bookmark' : 'bookmark-outline'}
-            iconColor={favoriteStatus ? statusColors[favoriteStatus] : '#000'}
+            iconColor={favoriteStatus ? statusColors[favoriteStatus] : '#fff'}
             size={40}
             onPress={() => setMenuVisible(true)}
           />

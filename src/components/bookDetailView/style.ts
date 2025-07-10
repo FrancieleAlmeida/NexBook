@@ -4,14 +4,14 @@ export const styles = StyleSheet.create({
   container: {
     padding: 20,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#0C0C0E',
   },
   thumbnail: {
     width: 150,
     height: 220,
     borderRadius: 8,
     marginBottom: 16,
-    backgroundColor: '#eee',
+    backgroundColor: '#2A2A2E',
   },
   noImage: {
     justifyContent: 'center',
@@ -22,35 +22,36 @@ export const styles = StyleSheet.create({
     fontSize: 22,
     marginBottom: 8,
     textAlign: 'center',
+    color: '#FFFFFF',
   },
   authors: {
     fontSize: 16,
-    color: '#555',
+    color: '#A1A1AA',
     marginBottom: 8,
   },
   info: {
     fontSize: 14,
-    color: '#666',
+    color: '#A1A1AA',
     marginBottom: 6,
   },
   description: {
     fontSize: 15,
-    color: '#444',
+    color: '#FFFFFF',
     textAlign: 'justify',
     marginVertical: 12,
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#008400',
     paddingVertical: 10,
     paddingHorizontal: 18,
-    borderRadius: 6,
+    borderRadius: 8,
     marginTop: 10,
   },
   buyButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#0AAB3C',
   },
   buttonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontWeight: '600',
     fontSize: 16,
   },
@@ -64,5 +65,4 @@ export const styles = StyleSheet.create({
     right: 10,
     padding: 8,
   },
-
 });

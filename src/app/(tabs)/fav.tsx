@@ -61,7 +61,7 @@ export default function Favorites() {
   };
 
   if (!user) return <View style={styles.centered}><Text>Você precisa estar logado para ver os favoritos.</Text></View>;
-  if (loading) return <View style={styles.centered}><ActivityIndicator size="large" color="#007AFF" /></View>;
+  if (loading) return <View style={styles.centered}><ActivityIndicator size="large" color="#008400" /></View>;
 
   const sections = [
     { title: '📖 Lendo recentemente', key: 'lendo' },
@@ -70,7 +70,7 @@ export default function Favorites() {
   ] as const;
 
   return (
-    <ScrollView contentContainerStyle={styles.list}>
+    <ScrollView contentContainerStyle={styles.list} style={{ backgroundColor: '#0C0C0E' }}>
       {sections.map(({ key, title }) => (
         <View key={key}>
           <Text style={styles.sectionTitle}>{title}</Text>
@@ -89,22 +89,22 @@ export default function Favorites() {
 const styles = StyleSheet.create({
   list: {
     padding: 16,
+    backgroundColor: '#0C0C0E',
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 16,
     marginBottom: 8,
-    color: '#333',
+    color: '#FFFFFF',
   },
   emptyText: {
     fontStyle: 'italic',
-    color: '#777',
-    marginBottom: 12,
+    color: '#A1A1AA',
   },
   separator: {
     height: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: '#2A2A2E',
     marginTop: 8,
     marginBottom: 16,
   },
@@ -112,5 +112,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#0C0C0E',
   },
 });

@@ -58,7 +58,7 @@ export default function BookDetails() {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color="#008400" />
       </View>
     );
   }

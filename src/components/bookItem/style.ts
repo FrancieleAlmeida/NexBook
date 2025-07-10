@@ -4,20 +4,20 @@ export const styles = StyleSheet.create({
   bookCard: {
     flexDirection: 'row',
     marginTop: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#1F1F1F',
     borderRadius: 14,
     padding: 10,
     shadowColor: '#000',
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 1 },
     shadowRadius: 3,
-    elevation: 1,
+    elevation: 2,
   },
   thumbnail: {
     width: 70,
     height: 100,
     borderRadius: 8,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: '#2A2A2E',
   },
   noImage: {
     justifyContent: 'center',
@@ -35,11 +35,11 @@ export const styles = StyleSheet.create({
   bookTitle: {
     fontWeight: '700',
     fontSize: 16,
-    color: '#111827',
+    color: '#FFFFFF',
   },
   bookAuthors: {
     marginTop: 4,
     fontSize: 14,
-    color: '#6B7280',
+    color: '#A1A1AA',
   },
 });
