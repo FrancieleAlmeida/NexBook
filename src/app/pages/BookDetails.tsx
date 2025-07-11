@@ -56,12 +56,12 @@ export default function BookDetails() {
   }, [id]);
 
   if (loading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
-    );
-  }
+  return (
+    <View style={styles.centered}>
+      <ActivityIndicator size="large" color="#008400" />
+    </View>
+  );
+}
 
   if (!book) {
     return (
@@ -79,5 +79,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#0C0C0E',
   },
 });

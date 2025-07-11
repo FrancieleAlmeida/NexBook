@@ -5,10 +5,10 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: '#fff',
-        tabBarInactiveTintColor: '#999',
+        tabBarActiveTintColor: '#008400',
+        tabBarInactiveTintColor: '#2d662d',
         tabBarStyle: {
-          backgroundColor: '#182534',
+          backgroundColor: '#1f1f1f',
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
@@ -16,7 +16,7 @@ export default function TabLayout() {
         },
 
         headerStyle: {
-          backgroundColor: '#101923',
+          backgroundColor: '#1f1f1f',
           borderBottomWidth: 0,
         },
 
@@ -37,10 +37,10 @@ export default function TabLayout() {
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: ({ color, size }) => (<Ionicons name="book-outline" color={color} size={size} />) }} />
-      <Tabs.Screen name="search" options={{ title: 'Search', tabBarIcon: ({ color, size }) => (<Ionicons name="search-outline" color={color} size={size} />) }} />
-      <Tabs.Screen name="fav" options={{ title: 'Fav', tabBarIcon: ({ color, size }) => (<Ionicons name="bookmarks-outline" color={color} size={size} />) }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile', tabBarIcon: ({ color, size }) => (<Ionicons name="person-outline" color={color} size={size} />) }} />
+      <Tabs.Screen name="index" options={{ headerShown: false, title: 'Home', tabBarIcon: ({ color, size }) => (<Ionicons name="book-outline" color={color} size={size} />),}}/>
+      <Tabs.Screen name="search" options={{ title: 'Pesquisar', tabBarIcon: ({ color, size }) => (<Ionicons name="search-outline" color={color} size={size} />) }} />
+      <Tabs.Screen name="fav" options={{ title: 'Favoritos', tabBarIcon: ({ color, size }) => (<Ionicons name="bookmarks-outline" color={color} size={size} />) }} />
+      <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarIcon: ({ color, size }) => (<Ionicons name="person-outline" color={color} size={size} />) }} />
     </Tabs>
   );
 }

@@ -49,14 +49,10 @@ function MainLayout() {
 
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)/index" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)/fav" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)/profile" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)/search" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="auth/register" options={{ headerShown: false }} />
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />
-      <Stack.Screen name="pages/BookDetails" options={{ headerShown: true }} />
+      <Stack.Screen name="pages/BookDetails" options={{ headerShown: true, headerStyle: { backgroundColor: '#0C0C0E' }, headerTitleStyle: { color: '#FFFFFF' }, headerTintColor: '#2d662d' }} />
     </Stack>
   );
 }

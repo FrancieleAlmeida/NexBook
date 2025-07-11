@@ -54,7 +54,7 @@ export default function BooksSection({ title, query }: BooksSectionProps) {
         <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
       ) : (
         <View style={[styles.thumbnail, styles.noImage]}>
-          <Ionicons name="book-outline" size={110} color="#000" />
+         <Ionicons name="book-outline" size={110} color="#A1A1AA" />
         </View>
       )}
       <Text style={styles.bookTitle} numberOfLines={2}>
@@ -69,7 +69,7 @@ export default function BooksSection({ title, query }: BooksSectionProps) {
   return (
     <View style={styles.sectionContainer}>
       <Text style={styles.sectionTitle}>{title}</Text>
-      {loading && !loadingMore && <ActivityIndicator size="large" color="#007AFF" style={styles.loading} />}
+      {loading && !loadingMore && <ActivityIndicator size="large" color="#008400" style={styles.loading} />}
       {error && <Text style={styles.error}>{error}</Text>}
       <FlatList
         data={books}
@@ -80,7 +80,7 @@ export default function BooksSection({ title, query }: BooksSectionProps) {
         contentContainerStyle={{ paddingHorizontal: 16 }}
         onEndReached={() => fetchBooks(true)}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={loadingMore ? <ActivityIndicator size="small" color="#007AFF" /> : null}
+        ListFooterComponent={loadingMore ? <ActivityIndicator size="small" color="#008400" /> : null}
       />
     </View>
   );

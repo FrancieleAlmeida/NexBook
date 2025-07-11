@@ -31,7 +31,7 @@ export default function BookDetailView({ book }: Props) {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: '#0C0C0E' }}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.favoriteButton}>
           <FavoriteButton book={book} />
