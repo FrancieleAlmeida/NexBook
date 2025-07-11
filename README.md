@@ -1,19 +1,6 @@
 # 📚 NexBook
 
-Aplicativo mobile desenvolvido com **React Native**, **TypeScript** e **Expo Router**, com foco em busca, visualização e favoritação de livros utilizando a API do **Google Books**.  
-O app possui tema escuro e oferece uma experiência agradável para usuários que desejam explorar livros com facilidade.
-
----
-
-## 🎯 Objetivo
-
-Permitir ao usuário:
-- Buscar livros por categoria ou título
-- Ver detalhes do livro (autor, descrição, idioma, etc)
-- Favoritar livros e marcar com status personalizado
-- Remover favoritos
-- Gerenciar o perfil de usuário
-- Navegar entre telas com fluidez
+O **NexBook** é um aplicativo mobile desenvolvido com **React Native** e **TypeScript** que permite aos usuários buscar, visualizar e favoritar livros utilizando a API do Google Books. O app possui uma interface moderna com navegação por abas, tela de login/cadastro com autenticação via Supabase e sistema de favoritos com status personalizados.
 
 ---
 
@@ -30,58 +17,130 @@ Permitir ao usuário:
 
 ---
 
+## 🚀 Funcionalidades
+
+- Autenticação de usuário (login e cadastro)
+- Tela inicial com sugestões de livros em seções
+- Busca por livros com resultado em lista
+- Visualização de detalhes do livro
+- Favoritar livros e organizar por status (lido, lendo, quero ler)
+- Perfil do usuário com opção de logout
+
+---
+
 ## 📲 Telas do Aplicativo
 
-- **Login**
-- **Cadastro**
-- **Página Principal**
-  - Seções com livros por categoria
-- **Detalhes do Livro**
-- **Favoritos**
-- **Perfil do Usuário**
+### 🌐 Tela de Login e Cadastro
+
+- Tela com design personalizado
+- Autenticação integrada com o Supabase
+- Feedback de erro e sucesso
 
 ---
 
-## 🧠 Estrutura do Projeto
+### 💖 Tela Principal
 
-```
+- Navegação por abas (Home, Buscar, Favoritos, Perfil)
+- Cada aba com layout responsivo e dark mode
+- Seções com livros organizados por categoria
+
+---
+
+### 📖 Tela de Detalhes do Livro
+
+- Informações detalhadas sobre o livro (título, autor, descrição, nota, idioma etc.)
+- Acesso à prévia e link de compra
+- Possibilidade de favoritar diretamente dessa tela
+
+---
+
+## 📁 Estrutura do Projeto
+
+``` text
 📦 NexBook
-├── assets/                 # Imagens (ícone, fundo, splash)
-├── components/            # Componentes reutilizáveis
-├── contexts/              # Contextos globais (ex: AuthContext)
-├── pages/                 # Telas internas (BookDetails, etc.)
-├── (tabs)/                # Navegação por abas principais
-├── services/              # Comunicação com API externa e Supabase
-├── styles/                # Estilos globais e compartilhados
-├── app.config.ts / json   # Configuração do projeto
-└── ...
+├── assets/
+│   ├── fonts/
+│   │   └── SpaceMono-Regular.ttf
+│   └── images/
+│       └── imagem_fundo.png
+├── constants/
+│   ├── books.ts
+│   ├── bookSections.ts
+│   └── supabase.ts
+├── src/
+│   ├── app/
+│   │   ├── +not-found.tsx
+│   │   ├── _layout.tsx
+│   │   ├── index.tsx
+│   │   ├── (tabs)/
+│   │   │   ├── _layout.tsx
+│   │   │   ├── fav.tsx
+│   │   │   ├── index.tsx
+│   │   │   ├── profile.tsx
+│   │   │   └── search.tsx
+│   │   ├── auth/
+│   │   │   ├── _style.ts
+│   │   │   ├── login.tsx
+│   │   │   └── register.tsx
+│   │   └── pages/
+│   │       └── BookDetails.tsx
+│   ├── components/
+│   │   ├── bookDetailView/
+│   │   │   ├── index.tsx
+│   │   │   └── style.ts
+│   │   ├── bookItem/
+│   │   │   ├── index.tsx
+│   │   │   └── style.ts
+│   │   ├── booksSection/
+│   │   │   ├── index.tsx
+│   │   │   └── style.ts
+│   │   ├── button/
+│   │   │   ├── index.tsx
+│   │   │   └── style.ts
+│   │   ├── favoriteButton/
+│   │   │   ├── index.tsx
+│   │   │   └── style.ts
+│   │   ├── favoriteItem/
+│   │   │   ├── index.tsx
+│   │   │   └── style.ts
+│   │   └── input/
+│   │       ├── index.tsx
+│   │       └── style.ts
+│   ├── contexts/
+│   │   └── AuthContext.tsx
+│   ├── lib/
+│   │   └── supabase.ts
+│   └── services/
+│       ├── api.ts
+│       └── favorites.ts
+├── .gitignore
+├── app.json
+├── expo-env.d.ts
+├── package-lock.json
+├── package.json
+├── README.md
+└── tsconfig.json
 ```
 
 ---
 
-## 🔐 Autenticação
+## 🔧 Como Rodar o Projeto
 
-- Autenticação de usuários via **Supabase Auth**
-- Salvamento do estado de login usando o `AsyncStorage`
-- Redirecionamento automático entre login/cadastro e a tela principal
-
----
-
-## 📦 Como rodar o projeto
-
-1. **Clone o repositório:**
+1. Clone o repositório:
 
 ```bash
 git clone https://github.com/FrancieleAlmeida/NexBook.git
 cd NexBook
 ```
 
-2. **Instale as dependências:**
+2. Instale as dependências:
+
 ```bash
 npm install
 ```
 
-3. **Inicie o servidor de desenvolvimento:**
+3. Inicie o servidor de desenvolvimento:
+
 ```bash
 npx expo start
 ```
@@ -101,15 +160,7 @@ npx expo start
 
 ---
 
-## 🧪 Possíveis Melhorias Futuras
-
-- Filtro por categoria/idioma na busca
-- Avaliação dos livros pelo próprio usuário
-- Sistema de comentários e reviews
-- Sincronização de favoritos na nuvem
-
----
-
 ## 👩‍💻 Desenvolvedoras
 
 Feito com ❤️ por **Franciele Almeida** e **Isabelle Rancan**
+Desenvolvido como projeto final da disciplina de **Desenvolvimento Mobile**.
