@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
   bookTitle: {
     fontWeight: '700',
     fontSize: 16,
-    color: '#FFFFFF',
+    color: '#fff',
   },
   bookAuthors: {
     marginTop: 4,

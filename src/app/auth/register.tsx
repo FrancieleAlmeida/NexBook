@@ -58,7 +58,7 @@ export default function Register() {
             formProps={{ name: "senha", control, rules: { required: "Informe a senha" } }}
             inputProps={{ placeholder: "Senha" }} />
           {isSubmitting ? (
-            <ActivityIndicator size="large" color="#000" />
+            <ActivityIndicator size="large" color="#008400" />
           ) : (
             <Button title="Cadastrar" onPress={handleSubmit(handleRegister)} />
           )}

@@ -56,7 +56,7 @@ export default function Index() {
             formProps={{ name: "senha", control, rules: { required: "Informe a senha" } }}
             inputProps={{ placeholder: "senha" }} />
           {isSubmitting ? (
-            <ActivityIndicator size="large" color="#000" />
+            <ActivityIndicator size="large" color="#008400" />
           ) : (
             <Button title="Entrar" onPress={handleSubmit(handleLogin)} />
           )}

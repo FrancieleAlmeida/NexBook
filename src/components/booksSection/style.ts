@@ -9,12 +9,12 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     paddingHorizontal: 16,
     marginBottom: 12,
-    color: '#FFFFFF', // título branco
+    color: '#fff',
   },
   bookCard: {
     width: 140,
     marginRight: 14,
-    backgroundColor: '#1F1F1F', // fundo escuro do card
+    backgroundColor: '#1F1F1F',
     borderRadius: 14,
     padding: 10,
     shadowColor: '#000',
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: 190,
     borderRadius: 10,
-    backgroundColor: '#2A2A2E', // fundo da imagem fallback
+    backgroundColor: '#2A2A2E',
   },
   noImage: {
     justifyContent: 'center',
@@ -41,10 +41,10 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 15,
     marginTop: 8,
-    color: '#FFFFFF', // título branco
+    color: '#FFFFFF',
   },
   bookAuthors: {
-    color: '#A1A1AA', // texto secundário
+    color: '#A1A1AA',
     marginTop: 4,
     fontSize: 13,
   },
