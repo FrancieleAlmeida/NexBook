@@ -1,5 +1,5 @@
 import React from 'react';
-import {  View,  Text,  Image,  ScrollView,  TouchableOpacity,  Linking,} from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, Linking, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import FavoriteButton from '@/components/favoriteButton';
@@ -31,7 +31,7 @@ export default function BookDetailView({ book }: Props) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0C0C0E' }}>
+    <SafeAreaView style={{ paddingTop: 90, paddingBottom: 40,  backgroundColor: '#0C0C0E' }}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.favoriteButton}>
           <FavoriteButton book={book} />
@@ -88,7 +88,7 @@ export default function BookDetailView({ book }: Props) {
           </TouchableOpacity>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

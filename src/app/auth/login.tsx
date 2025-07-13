@@ -5,7 +5,7 @@ import { ImageBackground } from 'react-native';
 
 import { Input } from "@/components/input";
 import { Button } from '@/components/button';
-import { styles } from './_style';
+import { styles } from './style';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -27,7 +27,6 @@ export default function Index() {
     }
     if (sessionData?.session?.user) {
       setAuth(sessionData.session.user);
-      Alert.alert("Bem Vindo");
       router.replace("/(tabs)");
     }
   };
@@ -36,11 +35,11 @@ export default function Index() {
   };
 
   return (
-    <ImageBackground 
-    source={require('../../../assets/images/imagem_fundo.png')} 
-    style={styles.background}
-    resizeMode="cover"
-  >
+    <ImageBackground
+      source={require('../../../assets/images/imagem_fundo.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
       <View style={styles.overlay}>
         <View style={styles.container}>
           <View style={styles.titleContainer}>

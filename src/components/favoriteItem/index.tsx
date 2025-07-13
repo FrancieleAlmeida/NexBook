@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Favorite, FavoriteStatus } from '@/services/favorites';
 import { Button } from '@/components/button';
 import { styles } from './style';
+import { useRouter } from 'expo-router';
 
 type Props = {
   item: Favorite;
@@ -13,8 +14,13 @@ type Props = {
 };
 
 export default function FavoriteItem({ item, onRemove, onChangeStatus }: Props) {
+  const router = useRouter();
+
   return (
-    <View style={styles.favoriteItem}>
+    <Pressable
+      onPress={() => router.navigate({ pathname: '/pages/BookDetails', params: { id: item.book_id } })}
+      style={({ pressed }) => [styles.favoriteItem, pressed && { opacity: 0.7 }]}
+    >
       {item.thumbnail ? (
         <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
       ) : (
@@ -31,16 +37,34 @@ export default function FavoriteItem({ item, onRemove, onChangeStatus }: Props) 
         <View style={styles.buttons}>
           <Button
             title="Mudar"
-            onPress={() => onChangeStatus(item.book_id, item.status)}
-            style={{ width: 80, height: 36, justifyContent: 'center', alignItems: 'center', }}
+            onPress={(e) => {
+              e.stopPropagation?.();
+              onChangeStatus(item.book_id, item.status);
+            }}
+            style={{
+              width: 80,
+              height: 36,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           />
           <Button
             title="Remover"
-            onPress={() => onRemove(item.book_id)}
-            style={{ width: 80, height: 36, backgroundColor: "#FF3B30", justifyContent: 'center', alignItems: 'center', borderRadius: 8 }}
+            onPress={(e) => {
+              e.stopPropagation?.();
+              onRemove(item.book_id);
+            }}
+            style={{
+              width: 80,
+              height: 36,
+              backgroundColor: '#FF3B30',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 8,
+            }}
           />
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }

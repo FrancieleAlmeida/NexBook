@@ -4,28 +4,28 @@
     "slug": "NexBook",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "assets/images/icone.png",
     "scheme": "nexbook",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#0C0C0E"
+      "resizeMode": "automatic",
+      "backgroundColor": "#fff"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#0C0C0E"
+        "foregroundImage": "assets/images/icone.png",
+        "backgroundColor": "#fff"
       },
       "edgeToEdgeEnabled": true
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "assets/images/icone.png"
     },
     "plugins": [
       "expo-router"
