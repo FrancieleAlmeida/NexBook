@@ -28,23 +28,29 @@ O **NexBook** é um aplicativo mobile desenvolvido com **React Native** e **Type
 
 ---
 
-## ⚠️ Pré-requisitos de Arquivos
+## ⚠️ Configurar chaves de API
 
-Antes de executar o projeto, verifique se os seguintes arquivos existem na pasta `constants/`. Eles são necessários para o funcionamento correto do aplicativo:
+Antes de executar o projeto, crie os arquivos em `constants` chamado `supabase.ts` e `books.ts` com:
 
-- `constants/books.ts`: contém os dados estáticos dos livros em destaque.
+- `constants/books.ts`: contém a chave anônima da api do google books.
 - `constants/supabase.ts`: contém a configuração de conexão com o Supabase (url e chave anônima).
-
-Se estiver utilizando uma cópia do projeto clonada de um repositório, esses arquivos podem não estar incluídos por motivos de segurança ou privacidade. Nesse caso:
-
-1. Crie manualmente o arquivo `constants/books.ts` com um array de livros de exemplo (mock).
-2. Crie `constants/supabase.ts` com a configuração do seu projeto no Supabase. Exemplo:
 
 ```bash
 // constants/supabase.ts
-export const SUPABASE_URL = 'https://sua-url.supabase.co';
-export const SUPABASE_ANON_KEY = 'sua-chave-anonima';
+export const supaUrl = 'https://sua-url.supabase.co';
+export const anonKey = 'sua-chave-anonima';
 ```
+
+```bash
+// constants/books.ts
+export const API_KEY = 'suaChaveAqui;
+```
+
+- Link para a chave do google books `https://console.cloud.google.com/apis/library/books.googleapis.com`.
+- Para o Supabase:
+  - Acesse seu projeto em ` https://supabase.com/ `
+  - Vá em `Project Settings > API `
+  - Copie a URL e a anon public key
 
 ---
 
@@ -167,7 +173,7 @@ npm install
 npx expo start
 ```
 
-> O app será carregado no Expo Go, disponível para Android/iOS
+> O app será carregado no Expo Go, disponível para Android
 
 ---
 
