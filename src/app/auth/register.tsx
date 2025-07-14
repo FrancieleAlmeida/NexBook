@@ -11,21 +11,31 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Register() {
-  const { control, handleSubmit, formState: { isSubmitting } } = useForm()
+  const { control, handleSubmit, formState: { isSubmitting, errors } } = useForm()
+  const { setAuth } = useAuth();
 
   async function handleRegister(data: any) {
-    const { email, senha } = data
-    const { error } = await supabase.auth.signUp({
+    const { email, senha, name, user } = data
+
+    const { data: sessionData, error } = await supabase.auth.signUp({
       email: email,
       password: senha,
-    })
+      options: {
+        data: {
+          name: name,
+          username: user,
+        }
+      }
+    });
 
     if (error) {
       Alert.alert("error", error.message)
       return
     }
-    router.replace("/");
-
+    if (!error) {
+      Alert.alert("Cadastro realizado", "Redirecionado para a home");
+      router.replace("/(tabs)");
+    }
   }
 
   return (
@@ -42,24 +52,43 @@ export default function Register() {
           </View>
           <Input
             icon='user'
-            formProps={{ name: "user", control }}
-            inputProps={{ placeholder: "Usuario" }} />
+            formProps={{ name: "user", control, rules: { required: "Informe o usuario ", minLength: { value: 3, message: "O usuario deve ter pelo menos 3 dígitos" } } }}
+            inputProps={{ placeholder: "Usuario" }}
+            errorMessage={errors.user?.message as string} />
+
           <Input
             icon='user'
-            formProps={{ name: "name", control }}
-            inputProps={{ placeholder: "Nome" }} />
+            formProps={{ name: "name", control, rules: { required: "Informe o nome", minLength: { value: 3, message: "O nome deve ter pelo menos 3 " } } }}
+            inputProps={{ placeholder: "Nome" }}
+            errorMessage={errors.name?.message as string} />
+
           <Input
-            icon='mail'
-            formProps={{ name: "email", control, rules: { required: "Informe o email" } }}
-            inputProps={{ placeholder: "Email" }} />
+            icon="mail"
+            formProps={{
+              name: "email",
+              control,
+              rules: {
+                required: "Informe o email",
+                pattern: {
+                  value: /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/i,
+                  message: "Email inválido",
+                },
+              },
+            }}
+            inputProps={{ placeholder: "Email" }}
+            errorMessage={errors.email?.message as string}
+
+          />
+
           <Input
             icon='key'
-            formProps={{ name: "senha", control, rules: { required: "Informe a senha" } }}
-            inputProps={{ placeholder: "Senha" }} />
+            formProps={{ name: "senha", control, rules: { required: "Informe a senha", minLength: { value: 6, message: "A senha deve ter pelo menos 6 dígitos." } } }}
+            inputProps={{ placeholder: "Senha", secureTextEntry: true }}
+            errorMessage={errors.senha?.message as string} />
           {isSubmitting ? (
             <ActivityIndicator size="large" color="#008400" />
           ) : (
-            <Button title="Cadastrar" onPress={handleSubmit(handleRegister)} />
+            <Button title="Cadastrar" onPress={handleSubmit(handleRegister,)} />
           )}
         </View>
       </View>

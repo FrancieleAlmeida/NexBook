@@ -54,7 +54,7 @@ export default function BooksSection({ title, query }: BooksSectionProps) {
         <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
       ) : (
         <View style={[styles.thumbnail, styles.noImage]}>
-         <Ionicons name="book-outline" size={110} color="#A1A1AA" />
+        <Ionicons name="book-outline" size={110} color="#A1A1AA" />
         </View>
       )}
       <Text style={styles.bookTitle} numberOfLines={2}>

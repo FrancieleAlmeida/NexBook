@@ -11,7 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 
 export default function Index() {
-  const { control, handleSubmit, formState: { isSubmitting } } = useForm()
+  const { control, handleSubmit, formState: { isSubmitting, errors } } = useForm()
   const { setAuth } = useAuth();
 
 
@@ -47,13 +47,24 @@ export default function Index() {
             <Text style={styles.title}>Book</Text>
           </View>
           <Input
-            icon='mail'
-            formProps={{ name: "email", control, rules: { required: "Informe o email" } }}
-            inputProps={{ placeholder: "email" }} />
+            icon="mail"
+            formProps={{
+              name: "email",
+              control,
+              rules: {
+                required: "Informe o email",
+                pattern: {
+                  value: /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/i,
+                  message: "Email inválido",
+                },
+              },
+            }}
+            inputProps={{ placeholder: "Email" }}
+            errorMessage={errors.email?.message as string}/>
           <Input
             icon='key'
             formProps={{ name: "senha", control, rules: { required: "Informe a senha" } }}
-            inputProps={{ placeholder: "senha" }} />
+            inputProps={{ placeholder: "senha", secureTextEntry: true }} />
           {isSubmitting ? (
             <ActivityIndicator size="large" color="#008400" />
           ) : (
