@@ -44,8 +44,10 @@ export default function FavoriteItem({ item, onRemove, onChangeStatus }: Props) 
             style={{
               width: 80,
               height: 36,
+              backgroundColor: '#008400',
               justifyContent: 'center',
               alignItems: 'center',
+              borderRadius: 8,
             }}
           />
           <Button

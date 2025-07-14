@@ -28,6 +28,26 @@ O **NexBook** é um aplicativo mobile desenvolvido com **React Native** e **Type
 
 ---
 
+## ⚠️ Pré-requisitos de Arquivos
+
+Antes de executar o projeto, verifique se os seguintes arquivos existem na pasta `constants/`. Eles são necessários para o funcionamento correto do aplicativo:
+
+- `constants/books.ts`: contém os dados estáticos dos livros em destaque.
+- `constants/supabase.ts`: contém a configuração de conexão com o Supabase (url e chave anônima).
+
+Se estiver utilizando uma cópia do projeto clonada de um repositório, esses arquivos podem não estar incluídos por motivos de segurança ou privacidade. Nesse caso:
+
+1. Crie manualmente o arquivo `constants/books.ts` com um array de livros de exemplo (mock).
+2. Crie `constants/supabase.ts` com a configuração do seu projeto no Supabase. Exemplo:
+
+```bash
+// constants/supabase.ts
+export const SUPABASE_URL = 'https://sua-url.supabase.co';
+export const SUPABASE_ANON_KEY = 'sua-chave-anonima';
+```
+
+---
+
 ## 📲 Telas do Aplicativo
 
 ### 🌐 Tela de Login e Cadastro
@@ -139,7 +159,9 @@ cd NexBook
 npm install
 ```
 
-3. Inicie o servidor de desenvolvimento:
+3. Verifique se os arquivos `books.ts` e `supabase.ts` estão corretamente configurados na pasta constants/.
+
+4. Inicie o servidor de desenvolvimento:
 
 ```bash
 npx expo start

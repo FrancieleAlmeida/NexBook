@@ -31,7 +31,7 @@ export default function BookDetailView({ book }: Props) {
   };
 
   return (
-    <SafeAreaView style={{ paddingTop: 90, paddingBottom: 40,  backgroundColor: '#0C0C0E' }}>
+    <SafeAreaView style={{ flex: 1, paddingTop: 90, paddingBottom: 40,  backgroundColor: '#0C0C0E' }}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.favoriteButton}>
           <FavoriteButton book={book} />
